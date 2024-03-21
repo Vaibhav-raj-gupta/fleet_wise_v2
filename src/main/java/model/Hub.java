@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Hub {
 	private int hubId;
 	//many to one
-    private Route route;
+    private int route;
     private String hubName;
     private String address;
     private String city;
@@ -16,7 +16,7 @@ public class Hub {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Hub(int hubId, Route route, String hubName, String address, String city, int pincode, long contactNumber,
+	public Hub(int hubId, int route, String hubName, String address, String city, int pincode, long contactNumber,
 			String emailAddress) {
 		super();
 		this.hubId = hubId;
@@ -34,10 +34,10 @@ public class Hub {
 	public void setHubId(int hubId) {
 		this.hubId = hubId;
 	}
-	public Route getRoute() {
+	public int getRoute() {
 		return route;
 	}
-	public void setRoute(Route route) {
+	public void setRoute(int route) {
 		this.route = route;
 	}
 	public String getHubName() {

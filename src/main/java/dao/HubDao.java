@@ -20,25 +20,24 @@ public class HubDao implements IDao<Hub> {
     }
 
     // SQL queries
-    private static final String CREATE_QUERY = "INSERT INTO hub (hubId, hubName, address, city, pincode, contactNumber, emailAddress) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE hub SET routeId=?, hubName=?, address=?, city=?, pincode=?, contactNumber=?, emailAddress=? WHERE hubId = ?";
-    private static final String DELETE_QUERY = "DELETE FROM hub WHERE hubId = ?";
-    private static final String FIND_ONE_QUERY = "SELECT * FROM hub WHERE hubId = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM hub";
-    private static final String GET_HUBS_BY_ROUTE_ID_QUERY = "SELECT * FROM hub WHERE routeId = ?";
+    private static final String CREATE_QUERY = "INSERT INTO hubs (route_id, hub_Name, address, city, pincode, contact_Number, email_Address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE hubs SET route_Id=?, hub_Name=?, address=?, city=?, pincode=?, contact_Number=?, email_Address=? WHERE hub_Id = ?";
+    private static final String DELETE_QUERY = "DELETE FROM hubs WHERE hub_Id = ?";
+    private static final String FIND_ONE_QUERY = "SELECT * FROM hubs WHERE hub_Id = ?";
+    private static final String FIND_ALL_QUERY = "SELECT * FROM hubs";
+    private static final String GET_HUBS_BY_ROUTE_ID_QUERY = "SELECT * FROM hubs WHERE route_Id = ?";
 
     @Override
     public Hub create(Hub hub) throws SQLException {
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(CREATE_QUERY)) {
-            stmt.setInt(1, hub.getHubId());
-            //stmt.setInt(2, hub.getRoute().getRouteId());
-            stmt.setString(3, hub.getHubName());
-            stmt.setString(4, hub.getAddress());
-            stmt.setString(5, hub.getCity());
-            stmt.setInt(6, hub.getPincode());
-            stmt.setLong(7, hub.getContactNumber());
-            stmt.setString(8, hub.getEmailAddress());
+            stmt.setInt(1, hub.getRoute());
+            stmt.setString(2, hub.getHubName());
+            stmt.setString(3, hub.getAddress());
+            stmt.setString(4, hub.getCity());
+            stmt.setInt(5, hub.getPincode());
+            stmt.setLong(6, hub.getContactNumber());
+            stmt.setString(7, hub.getEmailAddress());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -52,7 +51,7 @@ public class HubDao implements IDao<Hub> {
         boolean updated = false;
         try (Connection conn = dbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(UPDATE_QUERY)) {
-            stmt.setInt(1, hub.getRoute().getRouteId());
+            stmt.setInt(1, hub.getRoute());
             stmt.setString(2, hub.getHubName());
             stmt.setString(3, hub.getAddress());
             stmt.setString(4, hub.getCity());
@@ -140,7 +139,7 @@ public class HubDao implements IDao<Hub> {
     public boolean assignRouteToHub(int routeId, Hub hub) throws SQLException {
     	boolean updated = false;
         try (Connection conn = dbConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("UPDATE hub SET routeId=?, hubName=?, address=?, city=?, pincode=?, contactNumber=?, emailAddress=? WHERE hubId = ?")) {
+             PreparedStatement stmt = conn.prepareStatement("UPDATE hubs SET routeId=?, hubName=?, address=?, city=?, pincode=?, contactNumber=?, emailAddress=? WHERE hubId = ?")) {
             stmt.setInt(1, routeId);
             stmt.setString(2, hub.getHubName());
             stmt.setString(3, hub.getAddress());
@@ -162,8 +161,8 @@ public class HubDao implements IDao<Hub> {
         Hub hub = new Hub();
         hub.setHubId(rs.getInt("hubId"));
         RouteDao routeDao = new RouteDao(dbConnection);
-        Route route = routeDao.findOne(rs.getInt("routeId"));
-        hub.setRoute(route);
+        Route route = routeDao.findOne(rs.getInt("route"));
+        hub.setRoute(rs.getInt("route"));
         hub.setHubName(rs.getString("hubName"));
         hub.setAddress(rs.getString("address"));
         hub.setCity(rs.getString("city"));

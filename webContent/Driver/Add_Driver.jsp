@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Driver Form</title>
-  <link rel="stylesheet" href="Add_Driver.css">
+  <link rel="stylesheet" href="../Css.css">
 </head>
 <body>
  <div class="body-form">

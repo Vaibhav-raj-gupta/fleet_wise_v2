@@ -39,4 +39,24 @@
     <servlet-name>DriverServlet</servlet-name>
     <url-pattern>/Driver/DriverServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RouteServlet</display-name>
+    <servlet-name>RouteServlet</servlet-name>
+    <servlet-class>controller.RouteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RouteServlet</servlet-name>
+    <url-pattern>/Route/RouteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>HubServlet</display-name>
+    <servlet-name>HubServlet</servlet-name>
+    <servlet-class>controller.HubServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HubServlet</servlet-name>
+    <url-pattern>/Hub/HubServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

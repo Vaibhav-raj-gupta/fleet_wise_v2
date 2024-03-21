@@ -28,7 +28,7 @@ public class RouteDao implements IDao<Route> {
         ResultSet generatedKeys = null;
         try {
             connection = dbConnection.getConnection();
-            String query = "INSERT INTO route (routeName, startPoint, destinationPoint) VALUES (?, ?, ?)";
+            String query = "INSERT INTO routes(route_Name, start_Point, destination_Point) VALUES (?, ?, ?)";
             statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             statement.setString(1, route.getRouteName());
             statement.setString(2, route.getStartPoint());
@@ -43,16 +43,9 @@ public class RouteDao implements IDao<Route> {
             } else {
                 throw new SQLException("Creating route failed, no ID obtained.");
             }
-        } finally {
-            if (generatedKeys != null) {
-                generatedKeys.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return route;
     }
@@ -63,7 +56,7 @@ public class RouteDao implements IDao<Route> {
         PreparedStatement statement = null;
         try {
             connection = dbConnection.getConnection();
-            String query = "UPDATE route SET routeName=?, startPoint=?, destinationPoint=? WHERE routeId=?";
+            String query = "UPDATE routes SET route_Name=?, start_Point=?, destination_Point=? WHERE routeId=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, route.getRouteName());
             statement.setString(2, route.getStartPoint());
@@ -71,13 +64,9 @@ public class RouteDao implements IDao<Route> {
             statement.setInt(4, id);
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -87,18 +76,14 @@ public class RouteDao implements IDao<Route> {
         PreparedStatement statement = null;
         try {
             connection = dbConnection.getConnection();
-            String query = "DELETE FROM route WHERE routeId=?";
+            String query = "DELETE FROM routes WHERE routeId=?";
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             int affectedRows = statement.executeUpdate();
             return affectedRows > 0;
-        } finally {
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        }  catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -110,23 +95,16 @@ public class RouteDao implements IDao<Route> {
         Route route = null;
         try {
             connection = dbConnection.getConnection();
-            String query = "SELECT * FROM route WHERE routeId=?";
+            String query = "SELECT * FROM routes WHERE routeId=?";
             statement = connection.prepareStatement(query);
             statement.setInt(1, id);
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 route = extractRouteFromResultSet(resultSet);
             }
-        } finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return route;
     }
@@ -139,26 +117,20 @@ public class RouteDao implements IDao<Route> {
         List<Route> routes = new ArrayList<>();
         try {
             connection = dbConnection.getConnection();
-            String query = "SELECT * FROM route";
+            String query = "SELECT * FROM routes";
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Route route = extractRouteFromResultSet(resultSet);
                 routes.add(route);
             }
-        } finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-            if (statement != null) {
-                statement.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
         }
         return routes;
     }
+    
 
     private Route extractRouteFromResultSet(ResultSet resultSet) throws SQLException {
         Route route = new Route();
@@ -168,4 +140,31 @@ public class RouteDao implements IDao<Route> {
         route.setDestinationPoint(resultSet.getString("destinationPoint"));
         return route;
     }
+    
+    public List<Route> findRoutesByTripId(int tripId) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        List<Route> routes = new ArrayList<>();
+        try {
+            connection = dbConnection.getConnection();
+            String query = "SELECT r.* " +
+                           "FROM routes r " +
+                           "INNER JOIN trips t ON r.route_id = t.route_id " +
+                           "WHERE t.trip_id = ?";
+            statement = connection.prepareStatement(query);
+            statement.setInt(1, tripId);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Route route = extractRouteFromResultSet(resultSet);
+                routes.add(route);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return routes;
+    }
+
+
 }

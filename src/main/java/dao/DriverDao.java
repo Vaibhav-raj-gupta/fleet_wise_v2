@@ -105,23 +105,33 @@ public class DriverDao implements IDao<Driver> {
 		ResultSet resultSet=preparedStatement.executeQuery();
 		Driver driver=null;
 		if(resultSet.next()) {
-			driver = new Driver(resultSet.getString(1),resultSet.getString(2),resultSet.getInt(3),resultSet.getString(4),resultSet.getLong(5),resultSet.getString(6),resultSet.getString(7),resultSet.getString(8));			
+			driver = new Driver();
+			driver.setDriverId(resultSet.getInt(1));
+			driver.setName(resultSet.getString(2));
+			driver.setGender(resultSet.getString(3));
+			driver.setAge(resultSet.getInt(4));
+			driver.setLicenceNo(resultSet.getString(5));
+			driver.setPhoneNumber(resultSet.getLong(6));
+			driver.setEmailAddress(resultSet.getString(7));
+			driver.setAddress(resultSet.getString(8));
+			driver.setJoiningDate(resultSet.getString(9));
+			driver.setAvailable(resultSet.getString(10));			
 		}
 		
 		return driver;
 	}
 	
-	public Driver findBydrivernameAndPassword(String drivername) throws SQLException {
-		PreparedStatement ps = dbConnection.getConnection().prepareStatement("select * from drivers where drivername=?" );
-        ps.setString(1, drivername);
-
-        ResultSet resultSet = ps.executeQuery();
-        Driver driver = null;
-        if (resultSet.next()) {
-        	driver = new Driver(resultSet.getString(1),resultSet.getString(2),resultSet.getInt(3),resultSet.getString(4),resultSet.getLong(5),resultSet.getString(6),resultSet.getString(7),resultSet.getString(8));
-        }
-		return driver;
-	}
+//	public Driver findBydrivernameAndPassword(String drivername) throws SQLException {
+//		PreparedStatement ps = dbConnection.getConnection().prepareStatement("select * from drivers where drivername=?" );
+//        ps.setString(1, drivername);
+//
+//        ResultSet resultSet = ps.executeQuery();
+//        Driver driver = null;
+//        if (resultSet.next()) {
+//        	driver = new Driver(resultSet.getString(1),resultSet.getString(2),resultSet.getInt(3),resultSet.getString(4),resultSet.getLong(5),resultSet.getString(6),resultSet.getString(7),resultSet.getString(8));
+//        }
+//		return driver;
+//	}
 
 	@Override
 	public List<Driver> findAll() throws SQLException {
@@ -140,7 +150,7 @@ public class DriverDao implements IDao<Driver> {
 			System.out.println(driver);
 			drivers.add(driver);
 
-		}
+		}	
 		if (drivers.isEmpty())
 			return null;
 		return drivers;
