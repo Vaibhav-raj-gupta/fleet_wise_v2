@@ -263,7 +263,7 @@ public class ConsignmentDao implements IDao<Consignment> {
         Trip trip = tripDao.findOne(resultSet.getInt("trip_Id"));
         consignment.setTrip(trip);
         Date consignmentDate = resultSet.getDate("consignment_Date");
-        consignment.setConsignmentDate(consignmentDate.toString());
+        consignment.setConsignmentDate(consignmentDate.toString()); 
         consignment.setConsignmentName(resultSet.getString("consignment_Name"));
         consignment.setConsignmentAddress(resultSet.getString("consignment_Address"));
         consignment.setStatus(resultSet.getString("status"));

@@ -9,6 +9,7 @@ import model.Driver;
 import utils.DBConnection;
 
 import java.io.IOException;
+import java.util.List;
 
 import dao.DriverDao;
 
@@ -20,9 +21,35 @@ public class DriverServlet extends HttpServlet {
         super();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Served at: ").append(request.getContextPath());
-    }
+	    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	       
+	    	 
+	    	
+	    	try {
+	            // Get driver data from the database
+	        	Class.forName("oracle.jdbc.driver.OracleDriver");
+	            DBConnection dbConnection = DBConnection.getDbConnnection();
+	            DriverDao driverDao = new DriverDao(dbConnection);
+	            List<Driver> drivers = driverDao.findAll();
+	            
+	            System.out.println(drivers);
+	            
+//	            // Set the driver list as an attribute in the request object
+//	            request.setAttribute("Drivers", drivers);
+//	            
+//	            // Forward the request to the JSP page for displaying the list
+//	            request.getRequestDispatcher("/Driver/Driver_list.jsp").forward(request, response);
+	            
+	            request.setAttribute("drivers", drivers);
+	            RequestDispatcher dispatcher = request.getRequestDispatcher("/Driver/Driver_list.jsp");
+	            dispatcher.forward(request, response);
+	            
+	            
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            // Handle exceptions
+	        }
+	    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -60,4 +87,5 @@ public class DriverServlet extends HttpServlet {
         // Redirecting to doGet method to handle GET requests as well
         doGet(request, response);
     }
+    
 }

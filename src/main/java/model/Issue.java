@@ -4,24 +4,37 @@ import java.util.Objects;
 
 public class Issue {
 	private int issueId;
-    private Vehicle vehicleId;
+    private int vehicleId;
     //many to one
-    private Consignment consignmentId;
-    private Driver driverId;
+    private int consignmentId;
+    private int driverId;
     private String description;
     private String raisedOn;
     private String resolvedOn;
     private String remarks;
     private String status;
+    
 	public Issue() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Issue(int issueId, Vehicle vehicleId, Consignment consignmentId, Driver driverId, String description,
+	public Issue(int issueId, String description,int vehicleId, int driverId,
 			String raisedOn, String resolvedOn, String remarks, String status) {
 		super();
 		this.issueId = issueId;
+		this.description = description;
 		this.vehicleId = vehicleId;
+		this.driverId = driverId;
+		this.raisedOn = raisedOn;
+		this.resolvedOn = resolvedOn;
+		this.remarks = remarks;
+		this.status = status;
+	}
+	
+	public Issue(int issueId, int consignmentId, int driverId, String description,
+			String raisedOn, String resolvedOn, String remarks, String status) {
+		super();
+		this.issueId = issueId;
 		this.consignmentId = consignmentId;
 		this.driverId = driverId;
 		this.description = description;
@@ -30,28 +43,29 @@ public class Issue {
 		this.remarks = remarks;
 		this.status = status;
 	}
+	
 	public int getIssueId() {
 		return issueId;
 	}
 	public void setIssueId(int issueId) {
 		this.issueId = issueId;
 	}
-	public Vehicle getVehicleId() {
+	public int getVehicleId() {
 		return vehicleId;
 	}
-	public void setVehicleId(Vehicle vehicleId) {
+	public void setVehicleId(int vehicleId) {
 		this.vehicleId = vehicleId;
 	}
-	public Consignment getConsignmentId() {
+	public int getConsignmentId() {
 		return consignmentId;
 	}
-	public void setConsignmentId(Consignment consignmentId) {
+	public void setConsignmentId(int consignmentId) {
 		this.consignmentId = consignmentId;
 	}
-	public Driver getDriverId() {
+	public int getDriverId() {
 		return driverId;
 	}
-	public void setDriverId(Driver driverId) {
+	public void setDriverId(int driverId) {
 		this.driverId = driverId;
 	}
 	public String getDescription() {

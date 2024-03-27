@@ -1,5 +1,6 @@
 package controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,6 +11,7 @@ import model.Route;
 import utils.DBConnection;
 
 import java.io.IOException;
+import java.util.List;
 
 import dao.HubDao;
 import dao.RouteDao;
@@ -33,7 +35,32 @@ public class HubServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+	 	try {
+            // Get driver data from the database
+        	Class.forName("oracle.jdbc.driver.OracleDriver");
+            DBConnection dbConnection = DBConnection.getDbConnnection();
+            HubDao HubDao = new HubDao(dbConnection);
+            List<Hub> Hubs = HubDao.findAll();
+            
+            System.out.println(Hubs);
+            
+//            // Set the driver list as an attribute in the request object
+//            request.setAttribute("Drivers", drivers);
+//            
+//            // Forward the request to the JSP page for displaying the list
+//            request.getRequestDispatcher("/Driver/Driver_list.jsp").forward(request, response);
+            
+            request.setAttribute("Hubs", Hubs);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/Hub/Hub_list.jsp");
+            dispatcher.forward(request, response);
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle exceptions
+        }
+		
 	}
 
 	/**
@@ -71,8 +98,7 @@ public class HubServlet extends HttpServlet {
         }
     } catch (Exception e) {
         e.printStackTrace();
-    }
-    
+    }   
 		doGet(request, response);
 	}
 

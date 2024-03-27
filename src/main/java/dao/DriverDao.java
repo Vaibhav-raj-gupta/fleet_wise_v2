@@ -55,7 +55,7 @@ public class DriverDao implements IDao<Driver> {
 		boolean result=false;
 		try {
 			Connection connection=dbConnection.getConnection();
-			String sqlQuery="update drivers set name=?,gender=?,age=?,Licence_NO=?,Phone_Number=?,Email_Address=?,Address=?,Joining_Date=?,Available=? where driver_Id=?";
+			String sqlQuery="update drivers set name=?,gender=?,age=?,Licence_NO=?,Phone_Number=?,Email_Address=?,Address=?,Available=? where driver_Id=?";
 			PreparedStatement preparedStatement=connection.prepareStatement(sqlQuery);
 			preparedStatement.setString(1, driver.getName());
 			preparedStatement.setString(2, driver.getGender());
@@ -64,9 +64,8 @@ public class DriverDao implements IDao<Driver> {
 			preparedStatement.setLong(5, driver.getPhoneNumber());
 			preparedStatement.setString(6, driver.getEmailAddress());
 			preparedStatement.setString(7, driver.getAddress());
-			preparedStatement.setString(8, driver.getJoiningDate());
-			preparedStatement.setString(9, driver.getAvailable());
-			preparedStatement.setInt(10, id);
+			preparedStatement.setString(8, "TRUE");
+			preparedStatement.setInt(9, id);
 			if(preparedStatement.executeUpdate()>0) {
 				result=true;
 			}
@@ -82,9 +81,10 @@ public class DriverDao implements IDao<Driver> {
 		boolean result=false;
 		try {
 			Connection connection=dbConnection.getConnection();
-			String sqlQuery="delete from drivers where driver_Id=?";
+			String sqlQuery="update drivers set Available=? where driver_Id=?";
 			PreparedStatement preparedStatement=connection.prepareStatement(sqlQuery);
-			preparedStatement.setInt(1, id);
+			preparedStatement.setString(1, "FALSE");
+			preparedStatement.setInt(2, id);
 			if(preparedStatement.executeUpdate()>0) {
 				result=true;
 			}
@@ -97,29 +97,30 @@ public class DriverDao implements IDao<Driver> {
 	
 
 	@Override
-	public Driver findOne(int id) throws SQLException {
-		Connection connection=dbConnection.getConnection();
-		final String sqlQuery="select name,gender,age,Licence_NO,Phone_Number,Email_Address,Address,Joining_Date from drivers where driverId=?";
-		PreparedStatement preparedStatement=connection.prepareStatement(sqlQuery); 
-		preparedStatement.setInt(1, id);
-		ResultSet resultSet=preparedStatement.executeQuery();
-		Driver driver=null;
-		if(resultSet.next()) {
-			driver = new Driver();
-			driver.setDriverId(resultSet.getInt(1));
-			driver.setName(resultSet.getString(2));
-			driver.setGender(resultSet.getString(3));
-			driver.setAge(resultSet.getInt(4));
-			driver.setLicenceNo(resultSet.getString(5));
-			driver.setPhoneNumber(resultSet.getLong(6));
-			driver.setEmailAddress(resultSet.getString(7));
-			driver.setAddress(resultSet.getString(8));
-			driver.setJoiningDate(resultSet.getString(9));
-			driver.setAvailable(resultSet.getString(10));			
-		}
-		
-		return driver;
-	}
+	   public Driver findOne(int id) throws SQLException {
+        Connection connection = dbConnection.getConnection();
+        String sqlQuery = "SELECT * FROM Drivers WHERE Driver_ID = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        Driver driver = null;
+        if (resultSet.next()) {
+            driver = new Driver();
+            driver.setDriverId(resultSet.getInt("Driver_ID"));
+            driver.setName(resultSet.getString("Name"));
+            driver.setGender(resultSet.getString("Gender"));
+            driver.setAge(resultSet.getInt("Age"));
+            driver.setLicenceNo(resultSet.getString("Licence_NO"));
+            driver.setPhoneNumber(resultSet.getLong("Phone_Number"));
+            driver.setEmailAddress(resultSet.getString("Email_Address"));
+            driver.setAddress(resultSet.getString("Address"));
+            driver.setJoiningDate(resultSet.getDate("Joining_Date").toString());
+            driver.setAvailable(resultSet.getString("Available"));
+        }
+
+        return driver;
+    }
 	
 //	public Driver findBydrivernameAndPassword(String drivername) throws SQLException {
 //		PreparedStatement ps = dbConnection.getConnection().prepareStatement("select * from drivers where drivername=?" );
@@ -141,19 +142,23 @@ public class DriverDao implements IDao<Driver> {
 
 		final String sqlQuery = "select * from drivers";
 		ResultSet resultSet = selectStatement.executeQuery(sqlQuery);
+		
+		System.out.println(resultSet);
 
 		while (resultSet.next()) {
 			//using column names
 //			driver driver = new driver(resultSet.getInt("driverId"), resultSet.getString("driverName"),resultSet.getString("email"));
 			// using column position in result
-			Driver driver = new Driver(resultSet.getString(1),resultSet.getString(2),resultSet.getInt(3),resultSet.getString(4),resultSet.getLong(5),resultSet.getString(6),resultSet.getString(7),resultSet.getString(8));
+			Driver driver = new Driver(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),resultSet.getInt(4),resultSet.getString(5),resultSet.getLong(6),resultSet.getString(7),resultSet.getString(8),resultSet.getString(9),resultSet.getString(10));
 			System.out.println(driver);
 			drivers.add(driver);
 
 		}	
-		if (drivers.isEmpty())
+		if (drivers.isEmpty()) {
 			return null;
-		return drivers;
+		}
+			
+		return drivers; 
 	}
 
 }

@@ -59,4 +59,44 @@
     <servlet-name>HubServlet</servlet-name>
     <url-pattern>/Hub/HubServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>IssueServlet</display-name>
+    <servlet-name>IssueServlet</servlet-name>
+    <servlet-class>controller.IssueServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>IssueServlet</servlet-name>
+    <url-pattern>/Issue/IssueServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdateDriverServlet</display-name>
+    <servlet-name>UpdateDriverServlet</servlet-name>
+    <servlet-class>controller.UpdateDriverServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateDriverServlet</servlet-name>
+    <url-pattern>/Driver/UpdateDriverServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdateRouteServlet</display-name>
+    <servlet-name>UpdateRouteServlet</servlet-name>
+    <servlet-class>controller.UpdateRouteServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateRouteServlet</servlet-name>
+    <url-pattern>/Route/UpdateRouteServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>UpdateHubServlet</display-name>
+    <servlet-name>UpdateHubServlet</servlet-name>
+    <servlet-class>controller.UpdateHubServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateHubServlet</servlet-name>
+    <url-pattern>/Hub/UpdateHubServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

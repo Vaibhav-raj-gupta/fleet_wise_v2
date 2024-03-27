@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -56,7 +57,7 @@ public class RouteDao implements IDao<Route> {
         PreparedStatement statement = null;
         try {
             connection = dbConnection.getConnection();
-            String query = "UPDATE routes SET route_Name=?, start_Point=?, destination_Point=? WHERE routeId=?";
+            String query = "UPDATE routes SET route_Name=?, start_Point=?, destination_Point=? WHERE route_Id=?";
             statement = connection.prepareStatement(query);
             statement.setString(1, route.getRouteName());
             statement.setString(2, route.getStartPoint());
@@ -88,46 +89,48 @@ public class RouteDao implements IDao<Route> {
     }
 
     @Override
-    public Route findOne(int id) throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+    public Route findOne(int routeId) throws SQLException {
+    	
+    	Connection connection = dbConnection.getConnection();
+        String sqlQuery = "SELECT * FROM Routes WHERE Route_ID = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, routeId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        
         Route route = null;
-        try {
-            connection = dbConnection.getConnection();
-            String query = "SELECT * FROM routes WHERE routeId=?";
-            statement = connection.prepareStatement(query);
-            statement.setInt(1, id);
-            resultSet = statement.executeQuery();
+
             if (resultSet.next()) {
-                route = extractRouteFromResultSet(resultSet);
+                String routeName = resultSet.getString("Route_Name");
+                String startPoint = resultSet.getString("Start_Point");
+                String destinationPoint = resultSet.getString("Destination_Point");
+
+                route = new Route(routeId, routeName, startPoint, destinationPoint);
             }
-        }catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
+        
+
         return route;
     }
 
     @Override
     public List<Route> findAll() throws SQLException {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
         List<Route> routes = new ArrayList<>();
-        try {
-            connection = dbConnection.getConnection();
-            String query = "SELECT * FROM routes";
-            statement = connection.prepareStatement(query);
-            resultSet = statement.executeQuery();
+
+        Connection connection = dbConnection.getConnection();
+        Statement selectStatement = connection.createStatement();
+
+            final String sqlQuery = "SELECT * FROM Routes";
+            ResultSet resultSet = selectStatement.executeQuery(sqlQuery);
+
             while (resultSet.next()) {
-                Route route = extractRouteFromResultSet(resultSet);
+                int routeId = resultSet.getInt("Route_ID");
+                String routeName = resultSet.getString("Route_Name");
+                String startPoint = resultSet.getString("Start_Point");
+                String destinationPoint = resultSet.getString("Destination_Point");
+
+                Route route = new Route(routeId, routeName, startPoint, destinationPoint);
                 routes.add(route);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        }
+
         return routes;
     }
     
